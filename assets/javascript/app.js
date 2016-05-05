@@ -1,8 +1,12 @@
 //music trivia code
 
 //create object
+
 var wins = 0;
 var losses = 0;
+var userAns = "";
+var questionNum = 0
+var questionCnt = 4;
 var questions = [
 {
 userQuest:"What did \"Weird Al\" Yankovic call his album that contained a parody of a song from Michael Jackson's album BAD?",
@@ -76,77 +80,104 @@ userAnswer:["Candide","Carousel","The Music Man","She Loves Me"],
 correctAnswer:3
 //She Loves Me
 }
-
 ]
 
-window.onload = function() {
-	for (var i=0; i<questions.length; i++) {
-		$('#question').html(questions[i].userQuest);
 
-		var question = questions[i];
+
+
+window.onload = function() {
+
+
+	var timeInSecs;
+	var ticker;
+
+	startTimer = function(secs) {
+	 
+	 	timeInSecs=parseInt(secs)-1;
+	 	ticker=setInterval(tick, 1000);
+	 	console.log('i work!')
+	 }
+
+
+	 tick = function (){
+	// 	function tick() {
+	 	var secs=timeInSecs;
+	 	if (secs>=0) {
+	 		timeInSecs--;
+	 		$('#countdown').html("Time Left: " + secs);
+	 	}
+	 	else {
+	 		clearInterval(ticker);
+	 		questionIterator++;
+	 		serveQuestion();
+	 		
+
+	 		//startTimer(30);
+	 	    $('#gamestatus').html("Time's Up!  Game Over!");
+	 	}
+
+	 }
+
+	var questionIterator = 0
+
+	function serveQuestion(){
+		console.log(questionIterator)
+		$('#question').empty();
+		$('#question').html(questions[questionIterator].userQuest);
+		
+
+		var ans=questions[questionIterator].correctAnswer;
+		var question = questions[questionIterator];
+	 // }
 		for (var x=0; x<question.userAnswer.length; x++) {
 			switch (x){
-case 0:
-$('#ans0').html(question.userAnswer[x]);
-				userAns = x			
+				
+				case 0:
+					$('#ans0').html(question.userAnswer[x]);					
 				break;
+				
 				case 1:
-$('#ans1').html(question.userAnswer[x]);		
-				userAns = x
+					$('#ans1').html(question.userAnswer[x]);		
 				break;
+				
 				case 2:
-$('#ans2').html(question.userAnswer[x]);
-				userAns = x
+					$('#ans2').html(question.userAnswer[x]);
 				break;
+				
 				case 3:
-$('#ans3').html(question.userAnswer[x]);
-				userAns = x
+					$('#ans3').html(question.userAnswer[x]);
 				break;	
 			}
-			console.log(question.userAnswer[x])
 		}
-		// code to check userAnswer to see if it matches correctAnswer
-		if (userAns === questions.correctAnswer) {
-			wins++
+
+		startTimer(30);
+
+	}
+
+	serveQuestion();
+
+	chkAnswer = function(userAns){
+		console.log(userAns);
+		console.log(ans);
+		if (userAns == ans) {					
+			wins++;
+			$('#correctresults').html("Questions Answered Correctly: " + wins);
+			console.log(wins);
 		}
 		else {
-			losses--
+			losses++;
+			$('#incorrectresults').html("Questions Answered Incorrectly: " + losses);
+			console.log(losses);
 		}
 	}
-}
-// getAnswer: function(){
-// 	$('#ans0').on('click', questions.ans0);
-// 	$('#ans1').on('click', questions.ans1);
-// 	$('#ans2').on('click', questions.ans2);
-// 	$('#ans3').on('click', questions.ans3);
 
-// }
-// code for countdown timer
-
-  
-
-var stopwatch = {
-  time:1000*30,
-  reset: function(){
-    $('#display').html('00:30');
-  },
-  start: function(){
-    counter = setInterval(stopwatch.count, 1000);
-  },
-  stop: function(){
-    clearInterval(counter);
-  },
-  count: function(){
-    stopwatch.time--;
-    var converted = stopwatch.timeConverter(stopwatch.time);
-    $('#display').html(converted);
-  },
-  timeConverter: function(t){
-    var seconds = (1000 * 30);
-    if (seconds < 10){
-      seconds = "0" + seconds;
-    }
-
-  }
+chkAnswer();
 
 };
+//}
+
+// for (var k=0; k<5; k++) {
+// 	getQuestion(k);	
+// }
+
+
